@@ -6,16 +6,19 @@ import Footer from "../components/Footer";
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
 import { useLocation } from "react-router-dom";
-
+import { useDispatch } from 'react-redux';
+import { addProductToOrder } from '../redux/slice/orderSlice';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function DetailProduct() {
     const user = useSelector((state) => state.user.user);
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { id } = location.state || {}; // Lấy id từ state
+    const dispatch = useDispatch();
 
-    console.log("user123", id)
+    const { id } = location.state || {}; // Lấy id từ state
 
     console.log(user);
 
@@ -68,6 +71,27 @@ function DetailProduct() {
     };
 
     const [activeTab, setActiveTab] = useState("description");
+
+    const handleAddOrder = () => {
+        const order = {
+            productId: id,
+            name: products?.name,
+            avatar: products?.avatar,
+            price: products?.price,
+            quantity: quantity,
+        }
+
+        dispatch(addProductToOrder(order));
+        console.log(order);
+
+        toast.success("Sản phẩm đã được thêm vào giỏ hàng", {
+            position: "top-right",
+            autoClose: 2000,
+            hideProgressBar: true,
+            theme: "light",
+            className: "bg-blue-500 text-white font-semibold border-2 border-green-500",
+        });
+    }
 
 
     return (
@@ -217,11 +241,13 @@ function DetailProduct() {
 
                         <div className="p-4 pl-0 bg-white">
                             <button
+                                onClick={handleAddOrder}
                                 style={{ fontSize: '18px', width: '280px' }}
                                 className="border-green-700 border bg-green-700 text-white px-4 py-2 rounded-full w-full mb-4 text-lg font-bold transition duration-300 ease-in-out hover:bg-white hover:border hover:border-green-700 hover:text-green-700"
                             >
                                 THÊM VÀO GIỎ
                             </button>
+                            <ToastContainer />
 
                             <div>
                                 <h2 className="font-semibold mb-2">Dịch vụ & Khuyến mãi</h2>
@@ -261,10 +287,6 @@ function DetailProduct() {
                 )}
 
             </main>
-
-
-
-
             <div className="container mx-auto px-0 mb-16 py-0">
                 <div className="grid grid-cols-12 gap-4">
                     {/* Main Content */}
@@ -285,7 +307,6 @@ function DetailProduct() {
                                     BÌNH LUẬN
                                 </button>
                             </div>
-
                             {/* Tab Content */}
                             <div className="mt-4">
                                 {activeTab === "description" && (
@@ -296,8 +317,6 @@ function DetailProduct() {
                                         <p className="text-xl text-left pt-4">
                                             {products?.content}
                                         </p>
-
-
                                     </div>
                                 )}
                                 {activeTab === "comments" && (
@@ -313,7 +332,6 @@ function DetailProduct() {
                             </div>
                         </div>
                     </div>
-
                     {/* Sidebar */}
                     <div className="col-span-3 bg-white shadow-sm">
                         <aside>
@@ -321,10 +339,6 @@ function DetailProduct() {
                             <h3 className="text-lg font-medium text-black bg-gray-300 border-b border-gray-300 pt-4 pb-4 mb-4 text-center">
                                 SÁCH MỚI PHÁT HÀNH
                             </h3>
-
-
-
-
                             <section>
                                 <div className="space-y-4">
                                     {listProducts?.map((book, index) => (
@@ -351,17 +365,6 @@ function DetailProduct() {
                     </div>
                 </div>
             </div>
-
-
-
-
-
-
-
-
-
-
-
             {/* Footer */}
             <Footer />
         </div>

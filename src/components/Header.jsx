@@ -3,11 +3,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faCartShopping, faTruck } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
-import * as UserServices from "../services/UserServices";
 import { clearUser } from '../redux/slice/userSlice';
+import { clearOrder } from '../redux/slice/orderSlice';
 
 function Header() {
     const user = useSelector((state) => state.user.user);
+    const order = useSelector((state) => state.order.orders);
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -55,6 +57,7 @@ function Header() {
         // Xóa access_token và thực hiện đăng xuất
         localStorage.removeItem('access_token');
         dispatch(clearUser());
+        dispatch(clearOrder());
         setIsLoggedIn(false);
         navigate("/sign-in");
     };
@@ -98,7 +101,7 @@ function Header() {
                     <div className="flex flex-col items-center text-gray-600 hover:text-green-600 cursor-pointer">
                         <div className="relative">
                             <FontAwesomeIcon icon={faCartShopping} className="text-2xl" />
-                            <span className="absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">0</span>
+                            <span className="absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{order?.length}</span>
                         </div>
                         <span className="text-sm mt-1">Giỏ hàng</span>
                     </div>

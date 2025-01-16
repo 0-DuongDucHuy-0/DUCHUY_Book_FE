@@ -4,6 +4,7 @@ import Home from "../page/HomePage";
 import Profile from "../page/ChangePassword";
 import Collections from "../page/Collections";
 import DetailProduct from "../page/DetailProduct";
+import OrderPage from "../page/OrderPage";
 
 export const router = [
     {
@@ -31,6 +32,11 @@ export const router = [
     {
         path: "/product/*",
         page: DetailProduct,
+        isPrivate: false,
+    },
+    {
+        path: "/order",
+        page: OrderPage,
         isPrivate: false,
     },
     {

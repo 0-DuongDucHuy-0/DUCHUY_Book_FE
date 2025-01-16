@@ -1,17 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import * as UserServices from "../services/UserServices";
 import { useMutationHooks } from "../hooks/useMutationHooks";
 import { useDispatch } from 'react-redux';
 import { setUser } from '../redux/slice/userSlice';
 import { jwtDecode } from "jwt-decode";
-
-import {
-  faShoppingCart,
-  faUserCircle,
-  faSignOutAlt,
-} from '@fortawesome/free-solid-svg-icons';
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
