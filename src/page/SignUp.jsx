@@ -5,15 +5,19 @@ import * as UserServices from "../services/UserServices";
 import { useMutationHooks } from "../hooks/useMutationHooks";
 import {
   faHome,
-  faCompass,
+  faShoppingCart,
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 
-function Register() {
+function SignUp() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
+    address: '',
+    phone: '',
   });
 
   const navigate = useNavigate();
@@ -25,6 +29,8 @@ function Register() {
     });
   };
 
+  console.log('formData', formData);
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -35,7 +41,6 @@ function Register() {
     }
 
     console.log('Form submitted:', formData);
-    // Thực hiện logic đăng ký (gửi dữ liệu đến server)
     mutation.mutate(formData);
   };
 
@@ -54,58 +59,19 @@ function Register() {
 
   const handleSignIn = () => {
     navigate("/sign-in");
-  }
+  };
 
   return (
     <div className="bg-gray-50 min-h-screen flex flex-col">
       {/* Header */}
-      <header className="bg-white shadow-md">
-        <div className="container mx-auto flex items-center justify-between px-6 py-4">
-          <div className="w-1/3">
-            <a href="#">
-              <img
-                src="/src/assets/img/icon_logo/VNU_LOGO.png"
-                alt="VNU Logo"
-                className="w-40"
-              />
-            </a>
-          </div>
-          <div className="w-1/3 text-center">
-            <h1 className="text-3xl font-extrabold text-blue-700 uppercase tracking-wide">
-              Hệ thống quản lý ký túc xá
-            </h1>
-          </div>
-          <div className="w-1/3 text-right">
-            <img
-              src="/src/assets/img/icon_logo/VNU_CSS_LOGO.png"
-              alt="VNU CSS Logo"
-              className="w-32 inline-block"
-            />
-          </div>
-        </div>
-      </header>
-
-      {/* Navigation */}
-      <nav className="bg-blue-700 shadow-md">
-        <div className="container mx-auto flex justify-end items-center px-6 py-2 text-white">
-          <a className="mx-4 hover:underline hover:text-gray-200 transition">
-            <FontAwesomeIcon icon={faHome} className="mr-1" /> Trang chủ
-          </a>
-          <a className="mx-4 hover:underline hover:text-gray-200 transition">
-            <FontAwesomeIcon icon={faCompass} className="mr-1" /> Trang điều khiển
-          </a>
-          <button className="flex items-center hover:underline">
-            <FontAwesomeIcon icon={faUser} className="mr-1" /> Tài khoản
-          </button>
-        </div>
-      </nav>
+      <Header />
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center bg-gray-100 py-8">
         <div className="w-full max-w-md bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="py-8 px-10">
             <h2 className="text-2xl font-semibold text-gray-800 text-center mb-4">
-              Đăng ký
+              Tạo tài khoản
             </h2>
             <form className="space-y-5" onSubmit={handleSubmit}>
               <div>
@@ -116,7 +82,7 @@ function Register() {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                  placeholder="Nhập email"
+                  placeholder="Nhập email của bạn"
                   required
                 />
               </div>
@@ -128,7 +94,7 @@ function Register() {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
-                  placeholder="Nhập mật khẩu"
+                  placeholder="Tạo mật khẩu"
                   required
                 />
               </div>
@@ -146,6 +112,31 @@ function Register() {
                   required
                 />
               </div>
+              <div>
+                <label className="block text-gray-600 font-medium mb-1">Số điện thoại</label>
+                <input
+                  type="phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  placeholder="Nhập số điện thoại của bạn"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-gray-600 font-medium mb-1">Địa chỉ</label>
+                <input
+                  type="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-600 focus:outline-none"
+                  placeholder="Nhập địa chỉ của bạn"
+                  required
+                />
+              </div>
+
               <button
                 type="submit"
                 className="w-full py-2 text-white font-semibold rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 focus:outline-none transition duration-200"
@@ -169,14 +160,9 @@ function Register() {
       </main>
 
       {/* Footer */}
-      <footer className="bg-blue-700 text-white py-4">
-        <div className="container mx-auto text-center">
-          <p>&copy; 2024 Hệ Thống Quản Lý Ký Túc Xá</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
-
   );
 }
 
-export default Register;
+export default SignUp;
