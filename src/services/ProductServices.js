@@ -38,4 +38,18 @@ export const getAllImageById = async (id) => {
     }
 };
 
+export const search = async (data) => {
+    try {
+        console.log("check", data)
+        const res = await axios.post(
+            `https://54d9-34-19-74-212.ngrok-free.app/match`,
+            data
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+};
+
 

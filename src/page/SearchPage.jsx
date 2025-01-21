@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Slider from '../components/Silder';
 import BookCard from '../components/BookCard';
+import * as ProductServices from "../services/ProductServices";
 
-function Collections() {
+
+function SearchPage() {
   const user = useSelector((state) => state.user.user);
+  const query = useSelector((state) => state.search.searchQuery.searchQuery);
 
   const navigate = useNavigate();
 
@@ -29,38 +32,46 @@ function Collections() {
     });
   };
 
-  const books = [
-    {
-      name: "Sách A",
-      price: 100000,
-      sale: 20,
-      avatar: "https://product.hstatic.net/1000237375/product/dk580019_02_cb9047f6afe44bed821b780218cbf839_large.jpg",
-    },
-    {
-      name: "Sách B",
-      price: 150000,
-      sale: 30,
-      avatar: "https://product.hstatic.net/1000237375/product/artboard_1_c0b4386529024bbe8844e43fefa950ab_large.png",
-    },
-    {
-      name: "Sách C",
-      price: 200000,
-      sale: 10,
-      avatar: "https://product.hstatic.net/1000237375/product/dk580019_02_cb9047f6afe44bed821b780218cbf839_large.jpg",
-    },
-  ];
+  const [products, setProduct] = useState(null);
 
-  const handleCategory = (category) => {
-    navigate(`/${category}`);
-  }
+  const fetchData = async () => {
+    try {
+      const res = await ProductServices.getAllProducts();
+      if (res?.status === "OK") {
+        // Đảm bảo rằng `products` đã được cập nhật xong
+        const searchProduct = await ProductServices.search({ products: res?.data, query: query });
+        console.log("products", searchProduct, res?.data);
+        setProduct(searchProduct);
+      }
+
+
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, [query]);
 
   return (
     <div className="bg-gray-100 flex flex-col min-h-screen font-sans">
       {/* Header */}
       <Header />
 
-      {/* slider */}
-      <Slider />
+      <ol className="breadcrumb breadcrumb-arrow hidden sm:flex container mx-auto px-4 py-2">
+        <li>
+          <a href="/" target="_self" className="text-black hover:underline">
+            Trang chủ
+          </a>
+        </li>
+        <li className="active">
+          <span className="text-gray-400 px-2"> / </span> {/* Thêm padding ở đây */}
+        </li>
+        <li className="active">
+          <span className="text-gray-400"> Tìm kiếm: "Kết quả tìm kiếm "{query}" - DUC HUY BOOK" </span>
+        </li>
+      </ol>
 
       {/* Main Content */}
       <main className="flex-grow container mx-auto px-4 py-12 flex gap-6">
@@ -131,25 +142,20 @@ function Collections() {
         <div className="flex-grow">
           {/* Top sách thay đổi cuộc đời */}
           <section className="bg-white shadow-md p-6">
-            <h2 className="text-xl text-gray-800 text-left mb-4">
-              <a href="" className="hover:text-blue-500">GIÁ TỐT MỖI NGÀY</a>
-            </h2>
-
             <div className="flex flex-wrap gap-6">
-              {books.map((book, index) => (
+              {products?.map((book, index) => (
                 <BookCard
                   key={index}
                   name={book.name}
                   price={book.price}
                   sale={book.sale}
                   avatar={book.avatar}
+                  id={book.id}
                 />
               ))}
             </div>
           </section>
         </div>
-
-
       </main>
 
 
@@ -159,4 +165,4 @@ function Collections() {
   );
 }
 
-export default Collections;
+export default SearchPage;

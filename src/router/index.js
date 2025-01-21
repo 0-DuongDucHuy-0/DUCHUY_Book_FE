@@ -5,6 +5,7 @@ import Profile from "../page/ChangePassword";
 import Collections from "../page/Collections";
 import DetailProduct from "../page/DetailProduct";
 import OrderPage from "../page/OrderPage";
+import SearchPage from "../page/SearchPage";
 
 export const router = [
     {
@@ -42,6 +43,11 @@ export const router = [
     {
         path: "/profile",
         page: Profile,
+        isPrivate: true,
+    },
+    {
+        path: "/search",
+        page: SearchPage,
         isPrivate: true,
     },
 ];

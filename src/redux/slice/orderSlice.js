@@ -21,15 +21,19 @@ export const orderSlice = createSlice({
             const productId = action.payload;
             state.orders = state.orders.filter((product) => product.productId !== productId); // Xóa sản phẩm khỏi danh sách
         },
-        // updateProductQuantity: (state, action) => {
-        //     const { productId, quantity } = action.payload;
-        //     const existingProduct = state.orders.find((product) => product.productId === productId);
-        //     if (existingProduct) {
-        //         existingProduct.quantity = quantity; // Cập nhật số lượng sản phẩm
-        //     }
-        // },
+        updateProductQuantity: (state, action) => {
+            const { productId, quantity } = action.payload;
+            const existingProduct = state.orders.find((product) => product.productId === productId);
+            if (existingProduct) {
+                existingProduct.quantity = quantity; // Cập nhật số lượng sản phẩm
+            }
+        },
         clearOrder: (state) => {
             state.orders = []; // Xóa toàn bộ đơn hàng
+        },
+        clearOrderById: (state, action) => {
+            const productId = action.payload;
+            state.orders = state.orders.filter((product) => product.productId !== productId); // Xóa sản phẩm theo productId
         }
     },
 });
@@ -38,7 +42,8 @@ export const {
     addProductToOrder,
     removeProductFromOrder,
     updateProductQuantity,
-    clearOrder
+    clearOrder,
+    clearOrderById
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

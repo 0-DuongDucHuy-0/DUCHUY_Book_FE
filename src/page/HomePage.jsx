@@ -22,16 +22,6 @@ function HomePage() {
     if (res?.status === "OK") {
       setProduct(res?.data);
     }
-    // const dataRequest_ = await UserServices.getAllRequestsStudent(user.user_id);
-    // if (dataRequest_?.status === "OK") {
-    //   setDataRequest(dataRequest_.data);
-    //   console.log('Fetching dataRequest', dataRequest)
-    // }
-    // const dataFees_ = await UserServices.getAllFeesRoom(user.room_id);
-    // if (dataFees_?.status === "OK") {
-    //   setDataFees(dataFees_.data);
-    //   console.log('Fetching dataFees', dataFees)
-    // }
   };
   useEffect(() => {
     fetchData();

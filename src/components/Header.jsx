@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { clearUser } from '../redux/slice/userSlice';
 import { clearOrder } from '../redux/slice/orderSlice';
+import { setSearchQuery } from "../redux/slice/searchSlice";
+
 
 function Header() {
     const user = useSelector((state) => state.user.user);
@@ -53,6 +55,14 @@ function Header() {
         navigate("/sign-up");
     };
 
+    const handleOrder = () => {
+        navigate("/order");
+    };
+
+    const handleHome = () => {
+        navigate("/");
+    };
+
     const handleLogout = () => {
         // Xóa access_token và thực hiện đăng xuất
         localStorage.removeItem('access_token');
@@ -66,27 +76,43 @@ function Header() {
         console.log('Xem hồ sơ');
     };
 
+    const [search, setSearch] = useState("");
+
+    const handleClick = () => {
+        console.log("Đang tìm kiếm: ", search);
+        dispatch(setSearchQuery({ searchQuery: search }));
+        navigate("/search");
+    }
+
+
     return (
         <header className="bg-white shadow">
             {/* Thanh trên cùng */}
             <div className="container mx-auto px-6 flex items-center justify-between py-4">
                 {/* Logo */}
-                <div className="flex flex-col items-center text-center">
+                <div
+                    onClick={handleHome}
+                    className="flex flex-col items-center text-center cursor-pointer"
+                >
                     <span className="text-green-600 font-bold text-3xl">
                         DucHuy<span className="text-gray-700">book</span>
                     </span>
                     <span className="text-lg text-gray-500 mt-1">Ươm mầm tri thức</span>
                 </div>
 
-                {/* Thanh tìm kiếm */}
                 <div className="flex-1 mx-8">
                     <div className="flex items-center border border-green-600 rounded-lg overflow-hidden">
                         <input
                             type="text"
                             placeholder="Tìm kiếm..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
                             className="flex-1 px-4 py-2 text-sm text-gray-700 focus:outline-none"
                         />
-                        <button className="bg-green-600 px-6 py-2 text-white text-sm hover:bg-green-700 transition">
+                        <button
+                            className="bg-green-600 px-6 py-2 text-white text-sm hover:bg-green-700 transition"
+                            onClick={handleClick}
+                        >
                             Tìm kiếm
                         </button>
                     </div>
@@ -98,7 +124,7 @@ function Header() {
                         <FontAwesomeIcon icon={faTruck} className="text-2xl" />
                         <span className="text-sm mt-1">Tra cứu đơn hàng</span>
                     </div>
-                    <div className="flex flex-col items-center text-gray-600 hover:text-green-600 cursor-pointer">
+                    <div onClick={handleOrder} className="flex flex-col items-center text-gray-600 hover:text-green-600 cursor-pointer">
                         <div className="relative">
                             <FontAwesomeIcon icon={faCartShopping} className="text-2xl" />
                             <span className="absolute top-0 right-0 bg-green-600 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center">{order?.length}</span>

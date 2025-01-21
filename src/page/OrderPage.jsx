@@ -3,10 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { useDispatch } from 'react-redux';
+import { clearOrderById, updateProductQuantity } from '../redux/slice/orderSlice';
 
 function OrderPage() {
     const user = useSelector((state) => state.user.user);
     const order = useSelector((state) => state.order.orders);
+    const dispatch = useDispatch();
 
     const navigate = useNavigate();
 
@@ -35,6 +38,7 @@ function OrderPage() {
     const handleRemoveItem = (id) => {
         setCart((prevCart) => prevCart.filter((item) => item.productId !== id));
         // viết thêm hàm xóa sản phẩm theo productId
+        dispatch(clearOrderById(id));
     };
 
     // Chuyển hướng về trang sản phẩm
@@ -52,6 +56,10 @@ function OrderPage() {
             totalAmount,
         };
         console.log("Dữ liệu gửi đi:", formData);
+        // cập nhật lại ở redux
+        formData.cart.map((item) => {
+            dispatch(updateProductQuantity({ productId: item.productId, quantity: item.quantity }));
+        })
         // Xử lý gửi form lên server
     };
 
