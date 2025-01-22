@@ -17,6 +17,8 @@ function OrderPage() {
     const [totalAmount, setTotalAmount] = useState(0);
     const [note, setNote] = useState("");
 
+    console.log(`OrderPage`, cart);
+
     // Tính tổng tiền
     useEffect(() => {
         const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);

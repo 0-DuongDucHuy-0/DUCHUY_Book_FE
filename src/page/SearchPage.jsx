@@ -43,8 +43,6 @@ function SearchPage() {
         console.log("products", searchProduct, res?.data);
         setProduct(searchProduct);
       }
-
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }

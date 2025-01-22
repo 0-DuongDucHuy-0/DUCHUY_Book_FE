@@ -77,7 +77,7 @@ function DetailProduct() {
             productId: id,
             name: products?.name,
             avatar: products?.avatar,
-            price: products?.price,
+            price: Number(products?.price) * (100 - Number(products?.sale)) / 100,
             quantity: quantity,
         }
 

@@ -6,6 +6,8 @@ import Collections from "../page/Collections";
 import DetailProduct from "../page/DetailProduct";
 import OrderPage from "../page/OrderPage";
 import SearchPage from "../page/SearchPage";
+import PaymentPage from "../page/PaymentPage";
+
 
 export const router = [
     {
@@ -48,6 +50,11 @@ export const router = [
     {
         path: "/search",
         page: SearchPage,
+        isPrivate: true,
+    },
+    {
+        path: "/payment",
+        page: PaymentPage,
         isPrivate: true,
     },
 ];
