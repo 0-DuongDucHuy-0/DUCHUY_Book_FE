@@ -67,3 +67,15 @@ export const refreshToken = async () => {
         throw error;
     }
 };
+
+export const getDetailUser = async (id) => {
+    try {
+        // const access_token = localStorage.getItem("access_token");
+        console.log('Deatail user', id);
+        const res = await axiosJWT.get(`http://localhost:3001/api/user/get-detail-user/${id}`);
+        return res.data;
+    } catch (error) {
+        console.error('Error signing in user:', error.response?.data || error.message);
+        throw error;
+    }
+};

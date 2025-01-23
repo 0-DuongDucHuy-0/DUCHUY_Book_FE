@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    orders: [] // Danh sách các sản phẩm trong đơn hàng
+    orders: [], // Danh sách các sản phẩm trong đơn hàng
+    note: "",
 };
 
 export const orderSlice = createSlice({
@@ -34,7 +35,10 @@ export const orderSlice = createSlice({
         clearOrderById: (state, action) => {
             const productId = action.payload;
             state.orders = state.orders.filter((product) => product.productId !== productId); // Xóa sản phẩm theo productId
-        }
+        },
+        updateNote: (state, action) => {
+            state.note = action.payload; // Cập nhật ghi chú đơn hàng
+        },
     },
 });
 
@@ -43,7 +47,8 @@ export const {
     removeProductFromOrder,
     updateProductQuantity,
     clearOrder,
-    clearOrderById
+    clearOrderById,
+    updateNote
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

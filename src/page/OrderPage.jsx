@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useDispatch } from 'react-redux';
-import { clearOrderById, updateProductQuantity } from '../redux/slice/orderSlice';
+import { clearOrderById, updateProductQuantity, updateNote } from '../redux/slice/orderSlice';
+import * as OrderServices from "../services/OrderServices";
+
 
 function OrderPage() {
     const user = useSelector((state) => state.user.user);
@@ -17,7 +19,7 @@ function OrderPage() {
     const [totalAmount, setTotalAmount] = useState(0);
     const [note, setNote] = useState("");
 
-    console.log(`OrderPage`, cart);
+    console.log(`OrderPage`, cart, user);
 
     // Tính tổng tiền
     useEffect(() => {
@@ -50,7 +52,7 @@ function OrderPage() {
     };
 
     // Gửi dữ liệu form
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = {
             note,
@@ -62,7 +64,9 @@ function OrderPage() {
         formData.cart.map((item) => {
             dispatch(updateProductQuantity({ productId: item.productId, quantity: item.quantity }));
         })
+        dispatch(updateNote(note));
         // Xử lý gửi form lên server
+        navigate("/payment")
     };
 
     return (

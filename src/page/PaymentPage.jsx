@@ -1,11 +1,68 @@
 import { useState } from "react";
+import { useSelector } from "react-redux";
+import * as OrderServices from "../services/OrderServices";
+import { useNavigate } from "react-router-dom";
+
 
 function PaymentPage() {
+    const navigate = useNavigate();
+
+    const user = useSelector((state) => state.user.user);
+    const order = useSelector((state) => state.order.orders);
+    const note = useSelector((state) => state.order.note);
+
+    console.log(`PaymentPage`, user, order, note);
+    const total = order.reduce((sum, book) => sum + book.price * book.quantity, 0);
+
     const [paymentMethod, setPaymentMethod] = useState("cod"); // Trạng thái để theo dõi phương thức thanh toán đã chọn
 
     const handlePaymentChange = (event) => {
         setPaymentMethod(event.target.value); // Cập nhật phương thức thanh toán khi người dùng thay đổi
     };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault(); // Prevent the default form submission
+        console.log("Button clicked:", total, order.length, user?.address, paymentMethod, note);
+        const res = await OrderServices.createOrder(user.user_id, {
+            price: total,
+            total_quantity: order.length,
+            note: note,
+            address: user?.address,
+            payment_method: paymentMethod,
+        });
+        if (res?.status === "OK") {
+            // navigate("/payment/complete");
+            const order_id = res.data.insertId;
+
+            for (let item of order) {
+                console.log("Transaction", order_id, item.productId, item.price, item.quantity, item.name, item.avatar);
+                try {
+                    const res2 = await OrderServices.createTransaction({
+                        order_id: order_id,
+                        product_id: item.productId,
+                        price: item.price,
+                        quantity: item.quantity,
+                        name: item.name,
+                        avatar: item.avatar
+                    });
+
+                    if (res2.status === "OK") {
+                        console.log("Transaction created successfully for product:", item.productId);
+                    } else {
+                        console.error("Failed to create transaction for product:", item.productId, "Status:", res2.status);
+                    }
+                } catch (error) {
+                    console.error("Error creating transaction for product:", item.productId, "Error:", error);
+                }
+            }
+
+
+        } else {
+            console.error("Error creating order:", res?.message);
+        }
+    };
+
+
     return (
         <div className="flex h-screen bg-gray-50">
             {/* Cột trái */}
@@ -135,14 +192,16 @@ function PaymentPage() {
                             >
                                 Quay lại giỏ hàng
                             </a>
-                            <form action="/checkouts/complete" method="post">
+                            <form>
                                 <button
-                                    type="submit"
+                                    type="button"
+                                    onClick={handleSubmit} // Attach the handleSubmit function to onClick
                                     className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 shadow-md"
                                 >
                                     Hoàn tất đơn hàng
                                 </button>
                             </form>
+
                         </div>
                     </main>
                 </div>
@@ -156,49 +215,30 @@ function PaymentPage() {
 
                     {/* Danh sách sản phẩm */}
                     <div className="space-y-6">
-                        {/* Sản phẩm 1 */}
-                        <div className="flex items-start gap-6">
-                            <div className="relative">
-                                <img
-                                    className="w-20 h-20 object-cover rounded-md"
-                                    alt="Sách: 100 Truyện Ngụ Ngôn Song Ngữ Anh - Việt Hay Nhất"
-                                    src="//product.hstatic.net/1000237375/product/bt_785bab2e9dcd4dd286820838c105113a_small.jpg"
-                                />
-                                <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                                    x1
-                                </span>
+                        {order?.map((book, index) => (
+                            <div key={index} className="flex items-center gap-4 py-4 border-b border-gray-200">
+                                {/* Hình ảnh sản phẩm */}
+                                <div className="relative flex-shrink-0">
+                                    <img
+                                        className="w-24 h-24 object-cover rounded-md"
+                                        alt={`Sách: ${book.name}`}
+                                        src={book.avatar || "//via.placeholder.com/96"} // Placeholder nếu không có ảnh
+                                    />
+                                    <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded-full">
+                                        x{book.quantity}
+                                    </span>
+                                </div>
+                                {/* Thông tin sản phẩm */}
+                                <div className="flex-grow">
+                                    <p className="text-gray-800 font-semibold text-lg">
+                                        {book.name}
+                                    </p>
+                                    <p className="text-gray-600 text-base">
+                                        {book.price}₫
+                                    </p>
+                                </div>
                             </div>
-                            <div className="flex-grow">
-                                <p className="text-gray-800 font-semibold text-lg">
-                                    Sách: 100 Truyện Ngụ Ngôn Song Ngữ Anh - Việt Hay Nhất
-                                </p>
-                                <p className="text-gray-600 text-base">
-                                    100,000₫
-                                </p>
-                            </div>
-                        </div>
-
-                        {/* Sản phẩm 2 */}
-                        <div className="flex items-start gap-6">
-                            <div className="relative">
-                                <img
-                                    className="w-20 h-20 object-cover rounded-md"
-                                    alt="Sách: Chọn Câu Chuyện Của Bạn, Thay Đổi Cuộc Đời Bạn"
-                                    src="//product.hstatic.net/1000237375/product/anh_web__11__46c2e9a383284bc885bfad1505c13d8d_small.png"
-                                />
-                                <span className="absolute -top-3 -right-3 bg-blue-600 text-white text-xs px-3 py-1 rounded-full">
-                                    x1
-                                </span>
-                            </div>
-                            <div className="flex-grow">
-                                <p className="text-gray-800 font-semibold text-lg">
-                                    Sách: Chọn Câu Chuyện Của Bạn, Thay Đổi Cuộc Đời Bạn
-                                </p>
-                                <p className="text-gray-600 text-base">
-                                    109,600₫
-                                </p>
-                            </div>
-                        </div>
+                        ))}
                     </div>
 
 
@@ -227,7 +267,7 @@ function PaymentPage() {
                     <div className="mt-6 border-t pt-4">
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-gray-600">Tạm tính</span>
-                            <span className="text-gray-800 font-medium">209,600₫</span>
+                            <span className="text-gray-800 font-medium">{total}₫</span>
                         </div>
                         <div className="flex justify-between items-center mb-2">
                             <span className="text-gray-600">Phí vận chuyển</span>
@@ -235,7 +275,7 @@ function PaymentPage() {
                         </div>
                         <div className="flex justify-between items-center text-lg font-semibold">
                             <span className="text-gray-800">Tổng cộng</span>
-                            <span className="text-blue-600">234,600₫</span>
+                            <span className="text-blue-600">{total + 25000}₫</span>
                         </div>
                     </div>
                 </div>

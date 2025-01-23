@@ -54,8 +54,9 @@ function SignIn() {
         localStorage.setItem("access_token", data?.access_token);
         if (data?.access_token) {
           const decoded = jwtDecode(data?.access_token);
-          if (decoded?.id) {
-            dispatch(setUser({ user_id: decoded?.id, email: formData.email }));
+          const res = await UserServices.getDetailUser(decoded?.id);
+          if (decoded?.id && res?.status === "OK") {
+            dispatch(setUser({ user_id: decoded?.id, email: formData.email, name: res?.data.name, phone: res?.data.phone, address: res?.data.address }));
             navigate("/")
           }
 
