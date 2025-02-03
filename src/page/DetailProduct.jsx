@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
+import * as RatingServices from "../services/RatingServices";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { addProductToOrder } from '../redux/slice/orderSlice';
@@ -25,6 +26,8 @@ function DetailProduct() {
     const [products, setProduct] = useState(null);
     const [listProducts, setListProduct] = useState(null);
     const [listImage, setListImage] = useState(null);
+    const [comments, setComments] = useState(null);
+    const [newComment, setNewComment] = useState("");
 
     const fetchData = async () => {
         const res = await ProductServices.getDetailProduct({ product_id: id });
@@ -39,16 +42,16 @@ function DetailProduct() {
         if (res1?.status === "OK") {
             setListProduct(res1?.data);
         }
+        const res2 = await RatingServices.getRatingByProduct(id);
+        if (res2?.status === "OK") {
+            setComments(res2?.data);
+        }
     };
     useEffect(() => {
         fetchData();
     }, []);
 
-    console.log('Fetching data', products, listImage);
-
-    const handleCategory = (category) => {
-        navigate(`/${category}`);
-    }
+    console.log('Test', comments, user);
 
     const [modalVisible, setModalVisible] = useState(false);
 
@@ -93,6 +96,20 @@ function DetailProduct() {
         });
     }
 
+    const handlePostComment = async () => {
+        if (newComment.trim()) {
+            const res = await RatingServices.createRating({
+                product_id: id,
+                user_id: user.user_id,
+                content: newComment,
+            });
+            if (res?.status === "OK") {
+                setProduct(res?.data[0]);
+                setComments([...comments, { name: "Người dùng", content: newComment }]);
+                setNewComment(""); // Reset ô nhập sau khi đăng
+            }
+        }
+    }
 
     return (
         <div className="bg-gray-100 flex flex-col min-h-screen font-sans">
@@ -320,13 +337,36 @@ function DetailProduct() {
                                     </div>
                                 )}
                                 {activeTab === "comments" && (
-                                    <div>
-                                        <div
-                                            className="fb-comments"
-                                            data-href="https://minhlongbook.vn/products/100-truyen-ngu-ngon-song-ngu-anh-viet-hay-nhat"
-                                            data-width="100%"
-                                            data-numposts="5"
-                                        ></div>
+                                    <div className="w-full h-screen p-4 bg-white">
+                                        {/* Ô nhập bình luận */}
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="text"
+                                                value={newComment}
+                                                onChange={(e) => setNewComment(e.target.value)}
+                                                placeholder="Bình luận..."
+                                                className="flex-grow px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                                            />
+                                            <button
+                                                onClick={handlePostComment}
+                                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700"
+                                            >
+                                                Đăng
+                                            </button>
+                                        </div>
+
+                                        {/* Danh sách bình luận */}
+                                        <div className="mt-4 space-y-4">
+                                            {comments.map((comment, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="p-3 border rounded-lg bg-gray-50 shadow-sm"
+                                                >
+                                                    <p className="text-blue-500 font-semibold">{comment.name}</p>
+                                                    <p className="text-gray-700">{comment.content}</p>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
                                 )}
                             </div>

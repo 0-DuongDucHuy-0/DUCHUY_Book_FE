@@ -31,7 +31,6 @@ function PaymentPage() {
             payment_method: paymentMethod,
         });
         if (res?.status === "OK") {
-            // navigate("/payment/complete");
             const order_id = res.data.insertId;
 
             for (let item of order) {
@@ -51,6 +50,7 @@ function PaymentPage() {
                     } else {
                         console.error("Failed to create transaction for product:", item.productId, "Status:", res2.status);
                     }
+                    navigate("/payment/complete");
                 } catch (error) {
                     console.error("Error creating transaction for product:", item.productId, "Error:", error);
                 }

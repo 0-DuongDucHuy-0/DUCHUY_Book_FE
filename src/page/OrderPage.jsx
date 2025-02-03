@@ -5,7 +5,6 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useDispatch } from 'react-redux';
 import { clearOrderById, updateProductQuantity, updateNote } from '../redux/slice/orderSlice';
-import * as OrderServices from "../services/OrderServices";
 
 
 function OrderPage() {
