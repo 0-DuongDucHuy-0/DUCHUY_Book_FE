@@ -148,7 +148,7 @@ function SearchPage() {
                   price={book.price}
                   sale={book.sale}
                   avatar={book.avatar}
-                  id={book.id}
+                  id={book.product_id}
                 />
               ))}
             </div>

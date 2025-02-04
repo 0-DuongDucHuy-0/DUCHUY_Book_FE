@@ -42,7 +42,7 @@ export const search = async (data) => {
     try {
         console.log("check", data)
         const res = await axios.post(
-            `https://54d9-34-19-74-212.ngrok-free.app/match`,
+            `https://872c-34-48-33-40.ngrok-free.app/match`,
             data
         );
         return res.data;
