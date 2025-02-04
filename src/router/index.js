@@ -1,7 +1,7 @@
 import SignIn from "../page/SignIn";
 import SignUp from "../page/SignUp";
 import Home from "../page/HomePage";
-import Profile from "../page/ChangePassword";
+import ChangePassword from "../page/ChangePassword";
 import Collections from "../page/Collections";
 import DetailProduct from "../page/DetailProduct";
 import OrderPage from "../page/OrderPage";
@@ -44,8 +44,8 @@ export const router = [
         isPrivate: false,
     },
     {
-        path: "/profile",
-        page: Profile,
+        path: "/change-password",
+        page: ChangePassword,
         isPrivate: true,
     },
     {

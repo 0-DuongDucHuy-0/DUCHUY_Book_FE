@@ -72,8 +72,14 @@ function Header() {
         navigate("/sign-in");
     };
 
+    const handleChangePassword = () => {
+        console.log('Xem hồ sơ');
+        navigate("/change-password");
+    };
+
     const handleProfile = () => {
         console.log('Xem hồ sơ');
+        navigate("/profile");
     };
 
     const [search, setSearch] = useState("");
@@ -145,6 +151,7 @@ function Header() {
                             <div ref={menuRef} className="absolute mt-2 bg-white shadow-lg p-2 rounded-md border border-gray-200">
                                 {isLoggedIn ? (
                                     <>
+                                        <div onClick={handleChangePassword} className="cursor-pointer hover:text-green-600 py-1 px-2 min-w-[112px]">Đổi mật khẩu</div>
                                         <div onClick={handleProfile} className="cursor-pointer hover:text-green-600 py-1 px-2 min-w-[112px]">Profile</div>
                                         <div onClick={handleLogout} className="cursor-pointer hover:text-green-600 py-1 px-2 min-w-[112px]">Đăng xuất</div>
                                     </>

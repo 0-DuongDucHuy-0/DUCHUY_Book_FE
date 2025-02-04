@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import Slider from '../components/Silder';
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
+import * as ColabMLServices from "../services/ColabMLServices";
+
 
 
 function SearchPage() {
@@ -39,7 +41,7 @@ function SearchPage() {
       const res = await ProductServices.getAllProducts();
       if (res?.status === "OK") {
         // Đảm bảo rằng `products` đã được cập nhật xong
-        const searchProduct = await ProductServices.search({ products: res?.data, query: query });
+        const searchProduct = await ColabMLServices.search({ products: res?.data, query: query });
         console.log("products", searchProduct, res?.data);
         setProduct(searchProduct);
       }

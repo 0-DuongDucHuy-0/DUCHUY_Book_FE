@@ -107,7 +107,7 @@ function ChangePassword() {
                 </form>
 
                 <button
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate("/")}
                     className="mt-4 w-full text-blue-600 underline text-sm"
                 >
                     Go Back

@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
 import * as RatingServices from "../services/RatingServices";
+import * as ColabMLServices from "../services/ColabMLServices";
 import { useLocation } from "react-router-dom";
 import { useDispatch } from 'react-redux';
 import { addProductToOrder } from '../redux/slice/orderSlice';
@@ -98,6 +99,19 @@ function DetailProduct() {
 
     const handlePostComment = async () => {
         if (newComment.trim()) {
+            const checkTocix = await ColabMLServices.toxicity({ text: newComment.trim() });
+            console.log("checkTocix", checkTocix.toxicity_result[0].score)
+            if (Number(checkTocix.toxicity_result[0].score) > 0.9) {
+                console.log("123456789")
+                toast.error("Tin nhắn của bạn chứa nội dung không phù hợp", {
+                    position: "top-right",
+                    autoClose: 2000,
+                    hideProgressBar: true,
+                    theme: "light",
+                    className: "bg-red-500 text-white font-semibold border-2 border-red-400",
+                });
+                return;
+            }
             const res = await RatingServices.createRating({
                 product_id: id,
                 user_id: user.user_id,
