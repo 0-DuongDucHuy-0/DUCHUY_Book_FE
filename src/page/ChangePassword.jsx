@@ -17,26 +17,33 @@ function ChangePassword() {
     const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();
 
-    console.log("local", localStorage.getItem("access_token"))
-
     const handleChangePassword = async (e) => {
         e.preventDefault();
         setError(null);
         setSuccess(null);
 
         if (newPassword !== confirmPassword) {
-            setError("New password and confirmation do not match.");
+            setError("Xác nhận mật khẩu không đúng");
             return;
         }
+        try {
+            const response = await UserServices.changePassword(user?.user_id, {
+                password: currentPassword,
+                newPassword: newPassword
+            });
 
-        const response = await UserServices.updateUser(user?.user_id, {
-            password: newPassword,
-        });
+            console.log(response);
 
-        console.log(response);
-
-        if (response.success) {
-            setSuccess("Password updated successfully.");
+            if (response?.status === "OK") {
+                setSuccess("Cập nhật mật khẩu thành công");
+                setCurrentPassword("");
+                setNewPassword("");
+                setConfirmPassword("");
+                console.log("ok")
+            }
+        } catch (error) {
+            console.log(error?.response.data.message.message, success, error);
+            setError(error?.response.data.message.message)
             setCurrentPassword("");
             setNewPassword("");
             setConfirmPassword("");
@@ -58,7 +65,7 @@ function ChangePassword() {
 
                     <div>
                         <label className="block text-gray-700 font-medium mb-2" htmlFor="currentPassword">
-                            Current Password
+                            Mật khẩu cũ
                         </label>
                         <input
                             type="password"
@@ -72,7 +79,7 @@ function ChangePassword() {
 
                     <div>
                         <label className="block text-gray-700 font-medium mb-2" htmlFor="newPassword">
-                            New Password
+                            Mật khẩu mới
                         </label>
                         <input
                             type="password"
@@ -86,7 +93,7 @@ function ChangePassword() {
 
                     <div>
                         <label className="block text-gray-700 font-medium mb-2" htmlFor="confirmPassword">
-                            Confirm New Password
+                            Xác nhận mật khẩu
                         </label>
                         <input
                             type="password"

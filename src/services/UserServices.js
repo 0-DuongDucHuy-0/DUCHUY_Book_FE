@@ -79,3 +79,13 @@ export const getDetailUser = async (id) => {
         throw error;
     }
 };
+
+export const changePassword = async (user_id, data) => {
+    try {
+        const res = await axios.put(`http://localhost:3001/api/user/change-password/${user_id}`, data);
+        return res.data;
+    } catch (error) {
+        console.error('Error signing in user:', error.response?.data || error.message);
+        throw error;
+    }
+};
