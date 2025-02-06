@@ -141,7 +141,7 @@ function Header() {
                         <div onClick={toggleMenu} className="flex flex-col items-center">
                             <FontAwesomeIcon icon={faUser} className="text-2xl" />
                             <span className="text-sm mt-1">
-                                {user?.email.split('@')[0] || "Tài khoản"}
+                                {user?.name || "Tài khoản"}
                             </span>
                         </div>
 

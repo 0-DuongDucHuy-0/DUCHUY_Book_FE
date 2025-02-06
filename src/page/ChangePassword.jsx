@@ -109,7 +109,7 @@ function ChangePassword() {
                         type="submit"
                         className="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition duration-300"
                     >
-                        <FontAwesomeIcon icon={faKey} /> Update Password
+                        <FontAwesomeIcon icon={faKey} /> Cập nhật mật khẩu
                     </button>
                 </form>
 
