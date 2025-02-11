@@ -26,3 +26,17 @@ export const createTransaction = async (data) => {
         throw error;
     }
 };
+
+export const GetAllTransactionsByUser = async (data) => {
+    console.log("check12", data);
+    try {
+        const res = await axios.post(
+            `http://localhost:3001/api/transaction/get-all-transactions-by-user`,
+            data
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+};

@@ -100,3 +100,14 @@ export const changePassword = async (user_id, data) => {
         throw error;
     }
 };
+
+export const getAllUser = async () => {
+    try {
+        console.log('Get all user');
+        const res = await axios.get(`http://localhost:3001/api/user/get-all-user`);
+        return res.data;
+    } catch (error) {
+        console.error('Error signing in user:', error.response?.data || error.message);
+        throw error;
+    }
+}

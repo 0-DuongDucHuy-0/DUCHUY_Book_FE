@@ -9,6 +9,9 @@ import SearchPage from "../page/SearchPage";
 import PaymentPage from "../page/PaymentPage";
 import CompletePage from "../page/CompletePage";
 import ProfilePage from "../page/ProfilePage";
+import HomeAdminPage from "../page/HomeAdminPage";
+import UserManagementPage from "../page/UserManagementPage";
+
 
 
 export const router = [
@@ -67,6 +70,16 @@ export const router = [
     {
         path: "/payment/complete",
         page: CompletePage,
+        isPrivate: true,
+    },
+    {
+        path: "/admin/product-management",
+        page: HomeAdminPage,
+        isPrivate: true,
+    },
+    {
+        path: "/admin/user-management",
+        page: UserManagementPage,
         isPrivate: true,
     },
 ];

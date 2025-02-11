@@ -5,6 +5,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
+import * as OrderServices from "../services/OrderServices";
 import * as RatingServices from "../services/RatingServices";
 import * as ColabMLServices from "../services/ColabMLServices";
 import { useLocation } from "react-router-dom";
@@ -29,6 +30,7 @@ function DetailProduct() {
     const [listImage, setListImage] = useState(null);
     const [comments, setComments] = useState(null);
     const [newComment, setNewComment] = useState("");
+    const [hasTransactions, setHasTransactions] = useState(false);
 
     const fetchData = async () => {
         const res = await ProductServices.getDetailProduct({ product_id: id });
@@ -46,6 +48,16 @@ function DetailProduct() {
         const res2 = await RatingServices.getRatingByProduct(id);
         if (res2?.status === "OK") {
             setComments(res2?.data);
+        }
+        const res3 = await OrderServices.GetAllTransactionsByUser({
+            user_id: user?.user_id,
+            product_id: id
+        });
+        console.log("check123", res3.data.length)
+        if (res3?.status === "OK" && res3.data.length) {
+            setHasTransactions(true);
+        } else {
+            setHasTransactions(false);
         }
     };
     useEffect(() => {
@@ -353,21 +365,28 @@ function DetailProduct() {
                                 {activeTab === "comments" && (
                                     <div className="w-full h-screen p-4 bg-white">
                                         {/* Ô nhập bình luận */}
-                                        <div className="flex items-center space-x-2">
-                                            <input
-                                                type="text"
-                                                value={newComment}
-                                                onChange={(e) => setNewComment(e.target.value)}
-                                                placeholder="Bình luận..."
-                                                className="flex-grow px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
-                                            />
-                                            <button
-                                                onClick={handlePostComment}
-                                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700"
-                                            >
-                                                Đăng
-                                            </button>
-                                        </div>
+                                        {hasTransactions && (
+                                            <div className="flex items-center space-x-2">
+                                                <input
+                                                    type="text"
+                                                    value={newComment}
+                                                    onChange={(e) => setNewComment(e.target.value)}
+                                                    placeholder="Bình luận..."
+                                                    className="flex-grow px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
+                                                />
+                                                <button
+                                                    onClick={handlePostComment}
+                                                    className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 active:bg-blue-700"
+                                                >
+                                                    Đăng
+                                                </button>
+                                            </div>
+                                        )}
+
+                                        {!hasTransactions && (
+                                            <p className="text-gray-500">Bạn cần mua sản phẩm này để có thể bình luận.</p>
+                                        )}
+
 
                                         {/* Danh sách bình luận */}
                                         <div className="mt-4 space-y-4">
