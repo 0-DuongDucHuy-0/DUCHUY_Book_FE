@@ -38,6 +38,19 @@ export const getAllImageById = async (id) => {
     }
 };
 
+export const createProduct = async (data) => {
+    try {
+        const res = await axios.post(
+            `http://localhost:3001/api/product/create-product`,
+            data
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+};
+
 
 
 

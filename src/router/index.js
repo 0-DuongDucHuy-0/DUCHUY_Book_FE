@@ -11,6 +11,7 @@ import CompletePage from "../page/CompletePage";
 import ProfilePage from "../page/ProfilePage";
 import HomeAdminPage from "../page/HomeAdminPage";
 import UserManagementPage from "../page/UserManagementPage";
+import CreateProductPage from "../page/CreateProductPage";
 
 
 
@@ -80,6 +81,11 @@ export const router = [
     {
         path: "/admin/user-management",
         page: UserManagementPage,
+        isPrivate: true,
+    },
+    {
+        path: "/admin/create-product",
+        page: CreateProductPage,
         isPrivate: true,
     },
 ];

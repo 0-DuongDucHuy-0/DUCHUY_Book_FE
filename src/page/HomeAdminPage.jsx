@@ -5,7 +5,6 @@ import AsideAmin from "../components/AsideAmin";
 import * as ProductServices from "../services/ProductServices";
 
 function HomeAdminPage() {
-    const user = useSelector((state) => state.user.user);
     const navigate = useNavigate();
 
     const [requests, setRequests] = useState([]);
@@ -24,7 +23,7 @@ function HomeAdminPage() {
     }, []);
 
     const handleCreateRoom = () => {
-        navigate('/admin/create-room');
+        navigate('/admin/create-product');
     };
 
     const handleSort = (field) => {

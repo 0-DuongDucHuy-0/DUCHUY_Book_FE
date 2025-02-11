@@ -7,7 +7,6 @@ import { clearUser } from '../redux/slice/userSlice';
 import { clearOrder } from '../redux/slice/orderSlice';
 import { setSearchQuery } from "../redux/slice/searchSlice";
 
-
 function Header() {
     const user = useSelector((state) => state.user.user);
     const order = useSelector((state) => state.order.orders);
