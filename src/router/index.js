@@ -84,7 +84,7 @@ export const router = [
         isPrivate: true,
     },
     {
-        path: "/admin/create-product",
+        path: "/admin/product-management/create",
         page: CreateProductPage,
         isPrivate: true,
     },

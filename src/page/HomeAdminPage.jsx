@@ -23,7 +23,7 @@ function HomeAdminPage() {
     }, []);
 
     const handleCreateRoom = () => {
-        navigate('/admin/create-product');
+        navigate('/admin/product-management/create');
     };
 
     const handleSort = (field) => {
