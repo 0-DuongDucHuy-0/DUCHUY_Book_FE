@@ -12,6 +12,7 @@ import ProfilePage from "../page/ProfilePage";
 import HomeAdminPage from "../page/HomeAdminPage";
 import UserManagementPage from "../page/UserManagementPage";
 import CreateProductPage from "../page/CreateProductPage";
+import OrderManagementPage from "../page/OrderManagementPage";
 
 
 
@@ -86,6 +87,11 @@ export const router = [
     {
         path: "/admin/product-management/create",
         page: CreateProductPage,
+        isPrivate: true,
+    },
+    {
+        path: "/admin/order-management",
+        page: OrderManagementPage,
         isPrivate: true,
     },
 ];

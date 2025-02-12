@@ -40,3 +40,13 @@ export const GetAllTransactionsByUser = async (data) => {
         throw error;
     }
 };
+
+export const getAllOrders = async () => {
+    try {
+        const res = await axios.get(`http://localhost:3001/api/order/get-all-orders`);
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+};

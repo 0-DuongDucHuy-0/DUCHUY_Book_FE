@@ -2,7 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearUser } from "../redux/slice/userSlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClipboardList, faUsers, faDoorOpen } from "@fortawesome/free-solid-svg-icons";
+import { faClipboardList, faUsers, faDoorOpen, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 function AsideAmin() {
     const navigate = useNavigate();
@@ -55,32 +55,43 @@ function AsideAmin() {
                             <li className="hs-accordion">
                                 <a
                                     onClick={() => handleNavigation("/admin/product-management")}
-                                    className={`w-full flex items-center gap-x-4 py-3 px-3 text-lg rounded-lg text-white hover:bg-gray-600 ${location.pathname.startsWith("/admin/product-management") ? "bg-gray-700" : ""
+                                    className={`w-full flex items-center gap-x-3 py-3 px-3 text-lg rounded-lg text-white hover:bg-gray-600 ${location.pathname.startsWith("/admin/product-management") ? "bg-gray-700" : ""
                                         }`}
                                 >
-                                    <FontAwesomeIcon icon={faClipboardList} className="text-2xl" />
-                                    Danh sách sản phẩm
+                                    <FontAwesomeIcon icon={faClipboardList} className="text-xl flex-shrink-0 w-6 text-center" />
+                                    <span className="leading-none">Danh sách sản phẩm</span>
                                 </a>
                             </li>
 
                             <li className="hs-accordion">
                                 <a
                                     onClick={() => handleNavigation("/admin/user-management")}
-                                    className={`w-full flex items-center gap-x-4 py-3 px-3 text-lg rounded-lg text-white hover:bg-gray-600 ${location.pathname.startsWith("/admin/user-management") ? "bg-gray-700" : ""
+                                    className={`w-full flex items-center gap-x-3 py-3 px-3 text-lg rounded-lg text-white hover:bg-gray-600 ${location.pathname.startsWith("/admin/user-management") ? "bg-gray-700" : ""
                                         }`}
                                 >
-                                    <FontAwesomeIcon icon={faUsers} className="text-2xl" />
-                                    Danh sách người dùng
+                                    <FontAwesomeIcon icon={faUsers} className="text-xl flex-shrink-0 w-6 text-center" />
+                                    <span className="leading-none">Danh sách người dùng</span>
+                                </a>
+                            </li>
+
+                            <li className="hs-accordion">
+                                <a
+                                    onClick={() => handleNavigation("/admin/order-management")}
+                                    className={`w-full flex items-center gap-x-3 py-3 px-3 text-lg rounded-lg text-white hover:bg-gray-600 ${location.pathname.startsWith("/admin/order-management") ? "bg-gray-700" : ""
+                                        }`}
+                                >
+                                    <FontAwesomeIcon icon={faShoppingCart} className="text-xl flex-shrink-0 w-6 text-center" />
+                                    <span className="leading-none">Danh sách đơn hàng</span>
                                 </a>
                             </li>
 
                             <li>
                                 <a
                                     onClick={handleSignOut}
-                                    className="w-full flex items-center gap-x-4 py-3 px-3 text-lg rounded-lg hover:bg-gray-600 text-white"
+                                    className="w-full flex items-center gap-x-3 py-3 px-3 text-lg rounded-lg hover:bg-gray-600 text-white"
                                 >
-                                    <FontAwesomeIcon icon={faDoorOpen} className="text-2xl" />
-                                    Đăng xuất
+                                    <FontAwesomeIcon icon={faDoorOpen} className="text-xl flex-shrink-0 w-6 text-center" />
+                                    <span className="leading-none">Đăng xuất</span>
                                 </a>
                             </li>
                         </ul>
