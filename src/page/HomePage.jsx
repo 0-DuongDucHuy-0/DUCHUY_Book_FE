@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Slider from '../components/Silder';
 import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
+import ChatBox from '../components/ChatBox';
 
 
 function HomePage() {
@@ -97,6 +98,8 @@ function HomePage() {
             </div>
           </section>
         </div>
+
+        <ChatBox />
 
 
       </main>
