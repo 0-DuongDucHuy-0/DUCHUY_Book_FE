@@ -1,10 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import * as ChatServices from "../services/ChatServices";
+import * as ColabMLServices from "../services/ColabMLServices";
 import { useSelector } from 'react-redux';
 
 
 const ChatBox = () => {
     const user = useSelector((state) => state.user.user);
+    const chatRef = useRef(null);
 
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState("");
@@ -19,26 +21,95 @@ const ChatBox = () => {
         fetchData();
     }, []);
 
+    // const sendMessage = async () => {
+    //     if (!input.trim()) return;
+    //     const sendMessage = await ChatServices.createChat({
+    //         message: input,
+    //         sender: "user",
+    //         sent_at: Date.now(),
+    //         user_id: user?.user_id
+    //     })
+    //     if (sendMessage?.status === "OK") {
+    //         const chatBotRes = await ColabMLServices.ask({
+    //             question: input,
+    //         });
+    //         if (chatBotRes?.status === "OK") {
+    //             setMessages(chatBotRes?.data);
+    //         }
+    //         if (chatBotRes?.answer) {
+    //             setMessages([...messages, { message: input, sender: "user", sent_at: Date.now(), user_id: user?.user_id }]);
+    //             const sendMessageChatBot = await ChatServices.createChat({
+    //                 message: chatBotRes?.answer,
+    //                 sender: "chatbot",
+    //                 sent_at: Date.now(),
+    //                 user_id: user?.user_id
+    //             })
+    //             if (sendMessageChatBot?.status === "OK") {
+    //                 setMessages([...messages, { message: chatBotRes?.answer, sender: "chatbot", sent_at: Date.now(), user_id: user?.user_id }]);
+    //             }
+    //         }
+    //     }
+    //     setInput("");
+    // };
+
     const sendMessage = async () => {
         if (!input.trim()) return;
-        const sendMessage = await ChatServices.createChat({
+
+        const userMessage = {
             message: input,
             sender: "user",
             sent_at: Date.now(),
             user_id: user?.user_id
-        })
-        if (sendMessage?.status === "OK") {
-            setMessages([...messages, { message: input, sender: "user", sent_at: Date.now(), user_id: user?.user_id }]);
+        };
+
+        // Gửi tin nhắn của người dùng lên server
+        const sendMessageRes = await ChatServices.createChat(userMessage);
+        if (sendMessageRes?.status !== "OK") return;
+
+        // Cập nhật UI ngay lập tức
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+
+        setInput(""); // Reset input sau khi hoàn tất
+
+        try {
+            // Gửi câu hỏi đến chatbot
+            const chatBotRes = await ColabMLServices.ask({ question: input });
+            if (chatBotRes?.status == "OK" || chatBotRes?.answer) {
+                const botMessage = {
+                    message: chatBotRes.answer,
+                    sender: "chatbot",
+                    sent_at: Date.now(),
+                    user_id: user?.user_id
+                };
+
+                // Gửi tin nhắn của chatbot lên database
+                const sendMessageChatBotRes = await ChatServices.createChat(botMessage);
+                if (sendMessageChatBotRes?.status === "OK") {
+                    // Chỉ cập nhật UI nếu tin nhắn của chatbot được lưu thành công
+                    setMessages((prevMessages) => [...prevMessages, botMessage]);
+                }
+            }
+
+        } catch (error) {
+            console.error("Error sending message:", error);
         }
-        setInput("");
     };
+
+    // Tự động cuộn xuống khi có tin nhắn mới
+    useEffect(() => {
+        if (chatRef.current) {
+            chatRef.current.scrollTop = chatRef.current.scrollHeight;
+        }
+    }, [messages]);
+
+
 
     console.log("ChatBox", user, messages);
 
 
     return (
         <div className="fixed bottom-5 right-5 max-w-md p-4 bg-gray-100 rounded-lg shadow-lg border border-gray-300">
-            <div className="h-64 overflow-y-auto p-2 bg-white rounded-md border border-gray-300">
+            <div ref={chatRef} className="h-64 overflow-y-auto p-2 bg-white rounded-md border border-gray-300">
                 {messages.map((msg, index) => (
                     <div key={index} className={`mb-2 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
                         <span
