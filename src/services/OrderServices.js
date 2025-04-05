@@ -50,3 +50,16 @@ export const getAllOrders = async () => {
         throw error;
     }
 };
+
+export const updateUser = async (order_id, data) => {
+    try {
+        const res = await axios.put(
+            `http://localhost:3001/api/order/update-orders/${order_id}`,
+            data
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+}

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const colabApi = "https://f947-35-237-141-60.ngrok-free.app"
+const colabApi = "https://fddc-35-196-58-119.ngrok-free.app"
 
 export const search = async (data) => {
     try {
