@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
+import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
@@ -8,51 +9,31 @@ import BookCard from '../components/BookCard';
 import * as ProductServices from "../services/ProductServices";
 import * as ColabMLServices from "../services/ColabMLServices";
 
-
-
-function SearchPage() {
+function CategoryPage() {
   const user = useSelector((state) => state.user.user);
   const query = useSelector((state) => state.search.searchQuery.searchQuery);
 
-  const navigate = useNavigate();
-
-  console.log(user);
-
-  const [selectedPrice, setSelectedPrice] = useState(null);
-  const [selectedBrand, setSelectedBrand] = useState([]);
-
-  const handlePriceChange = (price) => {
-    setSelectedPrice(price);
-  };
-
-  const handleBrandChange = (brand) => {
-    setSelectedBrand((prev) => {
-      if (prev.includes(brand)) {
-        return prev.filter((item) => item !== brand);
-      }
-      return [...prev, brand];
-    });
-  };
-
-  const [products, setProduct] = useState(null);
-
-  const fetchData = async () => {
-    try {
-      const res = await ProductServices.getAllProducts();
-      if (res?.status === "OK") {
-        // Đảm bảo rằng `products` đã được cập nhật xong
-        const searchProduct = await ColabMLServices.search({ products: res?.data, query: query });
-        console.log("products", searchProduct, res?.data);
-        setProduct(searchProduct);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
+  const { id } = useParams();
+  const [products, setProducts] = useState([]);
+  const [category, setCategory] = useState(null);
 
   useEffect(() => {
-    fetchData();
-  }, [query]);
+    const fetchProducts = async () => {
+      const res = await ProductServices.getProductsByCategory(id);
+      if (res?.status === "OK") {
+        setProducts(res.data);
+      }
+
+      const res1 = await ProductServices.getDetailCategory(id);
+      if (res1?.status === "OK") {
+        setCategory(res1.data);
+      }
+    };
+
+    fetchProducts();
+  }, [id]);
+
+  console.log("acb", products);
 
   return (
     <div className="bg-gray-100 flex flex-col min-h-screen font-sans">
@@ -69,7 +50,7 @@ function SearchPage() {
           <span className="text-gray-400 px-2"> / </span> {/* Thêm padding ở đây */}
         </li>
         <li className="active">
-          <span className="text-gray-400"> Tìm kiếm: "Kết quả tìm kiếm "{query}" - DUC HUY BOOK" </span>
+          <span className="text-gray-400"> Tìm kiếm: "Kết quả tìm kiếm "{category?.name}" - DUC HUY BOOK" </span>
         </li>
       </ol>
 
@@ -134,35 +115,31 @@ function SearchPage() {
 
         </aside> */}
 
-
-
-
-
         {/* Main Content - Right Section */}
         <div className="flex-grow">
           {/* Top sách thay đổi cuộc đời */}
           <section className="bg-white shadow-md p-6">
             <h2 className="text-xl text-gray-800 text-left mb-4">
-              <a href="" className="hover:text-blue-500">TÌM KIẾM THEO TỪ KHÓA</a>
+              <a href="" className="hover:text-blue-500">SÁCH THEO CHỦ ĐỀ</a>
             </h2>
             <div className="flex flex-wrap gap-6">
               {products?.map((book, index) => (
-                <BookCard
-                  key={index}
-                  name={book.name}
-                  price={book.price}
-                  sale={book.sale}
-                  avatar={book.avatar}
-                  id={book.product_id}
-                />
                 // <BookCard
                 //   key={index}
                 //   name={book.name}
                 //   price={book.price}
                 //   sale={book.sale}
                 //   avatar={book.avatar}
-                //   id={book.id}
+                //   id={book.product_id}
                 // />
+                <BookCard
+                  key={index}
+                  name={book.name}
+                  price={book.price}
+                  sale={book.sale}
+                  avatar={book.avatar}
+                  id={book.id}
+                />
               ))}
             </div>
           </section>
@@ -176,4 +153,4 @@ function SearchPage() {
   );
 }
 
-export default SearchPage;
+export default CategoryPage;

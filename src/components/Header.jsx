@@ -113,6 +113,11 @@ function Header() {
         navigate("/cart");
     }
 
+    const handleClickCategory = (categoryId) => {
+        navigate(`/category/${categoryId}`);
+    };
+
+
 
     return (
         <header className="bg-white shadow">
@@ -213,6 +218,7 @@ function Header() {
                                     categories.map((cat) => (
                                         <li
                                             key={cat.id}
+                                            onClick={() => handleClickCategory(cat.id)}
                                             className="px-4 py-2 hover:bg-green-100 cursor-pointer text-sm text-gray-700"
                                         >
                                             {cat.name}

@@ -63,4 +63,28 @@ export const getAllCategory = async () => {
     }
 };
 
+export const getProductsByCategory = async (category_id) => {
+    try {
+        const res = await axios.get(
+            `http://localhost:3001/api/product/get-all-product-by-category/${category_id}`,
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const getDetailCategory = async (category_id) => {
+    try {
+        const res = await axios.get(
+            `http://localhost:3001/api/category/get-detail-category/${category_id}`,
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+}
+
 

@@ -14,6 +14,7 @@ import UserManagementPage from "../page/UserManagementPage";
 import CreateProductPage from "../page/CreateProductPage";
 import OrderManagementPage from "../page/OrderManagementPage";
 import CartPage from "../page/CartPage";
+import CategoryPage from "../page/CategoryPage";
 
 export const router = [
     {
@@ -71,6 +72,11 @@ export const router = [
     {
         path: "/cart",
         page: CartPage,
+        isPrivate: true,
+    },
+    {
+        path: "/category/:id",
+        page: CategoryPage,
         isPrivate: true,
     },
     {
