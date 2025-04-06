@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearUser } from '../redux/slice/userSlice';
 import { clearOrder } from '../redux/slice/orderSlice';
 import { setSearchQuery } from "../redux/slice/searchSlice";
+import * as ProductServices from "../services/ProductServices";
+
 
 function Header() {
     const user = useSelector((state) => state.user.user);
@@ -16,6 +18,24 @@ function Header() {
 
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [categories, setCategories] = useState([]);
+    const [showCategoryList, setShowCategoryList] = useState(false);
+
+    const handleListCategory = async () => {
+        try {
+            // Chỉ gọi API nếu chưa load
+            if (!showCategoryList && categories.length === 0) {
+                const res = await ProductServices.getAllCategory();
+                if (res?.status === "OK") {
+                    setCategories(res.data || []);
+                }
+            }
+            setShowCategoryList((prev) => !prev);
+        } catch (error) {
+            console.error("Lỗi khi tải danh mục:", error);
+        }
+    };
+
     const menuRef = useRef(null); // useRef để theo dõi menu
     const userRef = useRef(null); // useRef để theo dõi phần tử user name
 
@@ -89,6 +109,10 @@ function Header() {
         navigate("/search");
     }
 
+    const handleCart = () => {
+        navigate("/cart");
+    }
+
 
     return (
         <header className="bg-white shadow">
@@ -125,7 +149,7 @@ function Header() {
 
                 {/* Biểu tượng */}
                 <div className="flex items-center space-x-8">
-                    <div className="flex flex-col items-center text-gray-600 hover:text-green-600 cursor-pointer">
+                    <div onClick={handleCart} className="flex flex-col items-center text-gray-600 hover:text-green-600 cursor-pointer">
                         <FontAwesomeIcon icon={faTruck} className="text-2xl" />
                         <span className="text-sm mt-1">Tra cứu đơn hàng</span>
                     </div>
@@ -172,13 +196,35 @@ function Header() {
             <div className="bg-gray-300">
                 <div className="container mx-auto px-6 py-4 flex items-center justify-between text-black-600">
                     {/* Bên trái */}
-                    <div className="flex items-center space-x-6">
-                        <span className="flex items-center space-x-2 cursor-pointer hover:text-green-600 text-sm font-medium">
+                    <div className="relative">
+                        {/* Nút mở danh mục */}
+                        <span
+                            onClick={handleListCategory}
+                            className="flex items-center space-x-2 cursor-pointer hover:text-green-600 text-sm font-medium"
+                        >
                             <span className="text-xl">☰</span>
                             <span className="text-sm">DANH MỤC SÁCH</span>
                         </span>
-                        <span className="cursor-pointer hover:text-green-600 text-sm font-medium">Sản phẩm đã xem</span>
+
+                        {/* Danh mục hiển thị bên dưới */}
+                        {showCategoryList && (
+                            <ul className="absolute left-0 mt-2 w-48 bg-white shadow-md border border-gray-200 rounded z-10 py-2">
+                                {categories.length > 0 ? (
+                                    categories.map((cat) => (
+                                        <li
+                                            key={cat.id}
+                                            className="px-4 py-2 hover:bg-green-100 cursor-pointer text-sm text-gray-700"
+                                        >
+                                            {cat.name}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <li className="px-4 py-2 text-sm text-gray-500">Không có danh mục</li>
+                                )}
+                            </ul>
+                        )}
                     </div>
+
 
                     {/* Bên phải */}
                     <div className="flex items-center space-x-6">

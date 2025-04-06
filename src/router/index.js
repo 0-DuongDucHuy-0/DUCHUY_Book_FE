@@ -13,8 +13,7 @@ import HomeAdminPage from "../page/HomeAdminPage";
 import UserManagementPage from "../page/UserManagementPage";
 import CreateProductPage from "../page/CreateProductPage";
 import OrderManagementPage from "../page/OrderManagementPage";
-
-
+import CartPage from "../page/CartPage";
 
 export const router = [
     {
@@ -67,6 +66,11 @@ export const router = [
     {
         path: "/payment",
         page: PaymentPage,
+        isPrivate: true,
+    },
+    {
+        path: "/cart",
+        page: CartPage,
         isPrivate: true,
     },
     {

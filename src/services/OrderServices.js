@@ -63,3 +63,27 @@ export const updateUser = async (order_id, data) => {
         throw error;
     }
 }
+
+export const getAllOrdersByUser = async (user_id) => {
+    try {
+        const res = await axios.get(
+            `http://localhost:3001/api/order/get-all-orders-by-user/${user_id}`
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+}
+
+export const getAllProductByOrder = async (order_id) => {
+    try {
+        const res = await axios.get(
+            `http://localhost:3001/api/transaction/get-all-product-by-order/${order_id}`
+        );
+        return res.data;
+    } catch (error) {
+        console.error("Error", error.response?.data || error.message);
+        throw error;
+    }
+}
