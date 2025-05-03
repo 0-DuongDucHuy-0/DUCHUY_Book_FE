@@ -124,14 +124,6 @@ function CategoryPage() {
             </h2>
             <div className="flex flex-wrap gap-6">
               {products?.map((book, index) => (
-                // <BookCard
-                //   key={index}
-                //   name={book.name}
-                //   price={book.price}
-                //   sale={book.sale}
-                //   avatar={book.avatar}
-                //   id={book.product_id}
-                // />
                 <BookCard
                   key={index}
                   name={book.name}

@@ -102,7 +102,43 @@ function OrderPage() {
                                 </div>
 
                                 <div className="ajax_content_cart">
-                                    {cart.map((item) => (
+
+                                    {cart.length === 0 ? (
+                                        <div className="text-center text-gray-500 py-8">
+                                            Không có cuốn sách nào.
+                                        </div>
+                                    ) : (
+                                        cart.map((item) => (
+                                            <div key={item.productId} className="list_product_cart grid grid-cols-6 gap-6 py-4 border-b border-gray-200">
+                                                <div>
+                                                    <img className="w-16 h-16 object-cover rounded-md" src={item.avatar} alt={item.name} />
+                                                </div>
+                                                <div className="text-gray-800">{item.name}</div>
+                                                <div className="text-center text-gray-700 pr-16">{item.price}đ</div>
+                                                <div className="text-center pr-8">
+                                                    <input
+                                                        type="number"
+                                                        min="1"
+                                                        value={item.quantity}
+                                                        className="w-16 text-center border border-gray-300 rounded-md px-2"
+                                                        onChange={(e) => handleQuantityChange(item.productId, parseInt(e.target.value))}
+                                                    />
+                                                </div>
+                                                <div className="text-center text-gray-700 pr-16">{item.price * item.quantity}đ</div>
+                                                <div className="text-center pr-16">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemoveItem(item.productId)}
+                                                        className="text-red-500 hover:text-red-700"
+                                                    >
+                                                        Xóa
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+
+                                    {/* {cart.map((item) => (
                                         <div key={item.productId} className="list_product_cart grid grid-cols-6 gap-6 py-4 border-b border-gray-200">
                                             <div>
                                                 <img className="w-16 h-16 object-cover rounded-md" src={item.avatar} alt={item.name} />
@@ -129,7 +165,7 @@ function OrderPage() {
                                                 </button>
                                             </div>
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
 
                                 <div className="list_button_cart grid grid-cols-2 gap-6 mt-8">
@@ -156,10 +192,22 @@ function OrderPage() {
                                             </button>
                                             <button
                                                 type="submit"
-                                                className="border-green-700 border bg-green-700 text-white px-4 py-2 rounded-full text-lg font-bold"
+                                                disabled={cart.length === 0}
+                                                className={`px-4 py-2 rounded-full text-lg font-bold 
+                                                    ${cart.length === 0
+                                                        ? 'bg-gray-400 text-white cursor-not-allowed'
+                                                        : 'bg-green-700 text-white hover:bg-green-800'}`
+                                                }
                                             >
                                                 THANH TOÁN
                                             </button>
+
+                                            {/* <button
+                                                type="submit"
+                                                className="border-green-700 border bg-green-700 text-white px-4 py-2 rounded-full text-lg font-bold"
+                                            >
+                                                THANH TOÁN
+                                            </button> */}
                                         </div>
                                     </div>
                                 </div>

@@ -6,6 +6,8 @@ import Footer from "../components/Footer";
 import { useDispatch } from 'react-redux';
 import { clearOrderById, updateProductQuantity, updateNote } from '../redux/slice/orderSlice';
 import * as OrderServices from "../services/OrderServices";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function CartPage() {
     const user = useSelector((state) => state.user.user);
@@ -41,6 +43,38 @@ function CartPage() {
 
     console.log(`OrderPage`, user);
 
+    const handleConfirmReceived = async (orderId) => {
+        console.log(`Xác nhận đã nhận hàng cho đơn hàng ${orderId}`);
+
+        const resUpdate = await OrderServices.updateUser(orderId, {
+            order_status_payment: 1,
+            order_status_transport: 2,
+        });
+
+        if (resUpdate?.status === "OK") {
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.id === orderId
+                        ? {
+                            ...order,
+                            order_status_payment: 1,
+                            order_status_transport: 2,
+                        }
+                        : order
+                )
+            );
+            toast.success(`Đơn hàng id:${orderId} đã được xác nhận là đã nhận!`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: true,
+                theme: "light",
+                className: "bg-blue-500 text-white font-semibold border-2 border-green-500",
+            });
+        }
+    };
+
+
+
     return (
         <div className="bg-gray-100 flex flex-col min-h-screen font-sans">
             <Header />
@@ -64,7 +98,7 @@ function CartPage() {
 
                 {orders?.length > 0 ? (
                     <div className="space-y-6">
-                        {orders?.map((order) => (
+                        {[...orders].reverse().map((order) => (
                             <div key={order.id} className="border border-gray-300 rounded-lg shadow p-6 bg-white">
                                 <div className="mb-4 flex justify-between items-center">
                                     <h2 className="text-xl font-semibold text-gray-700">Mã đơn hàng: <span className="text-blue-600">{order.id}</span></h2>
@@ -111,12 +145,23 @@ function CartPage() {
                                         </span>
                                     </div>
                                 </div>
+                                {order.order_status_transport === 1 && (
+                                    <div className="mt-4 flex justify-end">
+                                        <button
+                                            className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded"
+                                            onClick={() => handleConfirmReceived(order.id)}
+                                        >
+                                            Đã nhận hàng
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
                 ) : (
                     <p className="text-gray-600 text-lg text-center">Bạn chưa có đơn hàng nào.</p>
                 )}
+                <ToastContainer />
             </main>
 
 
